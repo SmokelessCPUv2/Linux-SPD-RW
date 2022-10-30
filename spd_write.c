@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     }
     else
     {
+        char buf[512] = {0};
         int spd = open(argv[3], O_RDONLY);
         if (spd < 1)
         {
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
         int addr = strtol(argv[2],NULL,16);
         int file;
         system("modprobe i2c-dev");
-        char buf[512] = {0};
+
         char filename[64];
         sprintf(filename,"/dev/i2c-%d",i2c_num);
         if ((file = open(filename, O_RDWR)) < 0)
