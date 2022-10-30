@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
         {
             if(i2c_smbus_write_byte_data(file, i, buf[i+256])<0)
            {
-            printf("Failded to write address Page 0 Add %02x",i);
+            printf("Failded to write address Page 1 Add %02x",i);
            }
 
            usleep(500);
