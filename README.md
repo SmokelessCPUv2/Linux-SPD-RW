@@ -2,8 +2,8 @@
 
 build with
 
-  make spd_dump
-  make spd_write
+    make spd_dump
+    make spd_write
 
 #TODO improve Readme
 
