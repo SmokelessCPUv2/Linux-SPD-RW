@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     else
     {
         char buf[512] = {0};
+        int err_no=0;
         int spd = open(argv[3], O_RDONLY);
         if (spd < 1)
         {
@@ -55,9 +56,9 @@ int main(int argc, char *argv[])
         //Read the entire page 0
         for (int i = 0; i < 256; i++)
         {
-            if(i2c_smbus_write_byte_data(file, i, buf[i])<0)
+            if(err_no=i2c_smbus_write_byte_data(file, i, buf[i])<0)
            {
-            printf("Failded to write Page 0 Address: %02x -> %d\n",i,,errno());
+            printf("Failded to write Page 0 Address: %02x -> %d\n",i,err_no);
            }
 
            usleep(8000);
@@ -71,9 +72,9 @@ int main(int argc, char *argv[])
         //Read the entire page 1
         for (int i = 0; i < 256; i++)
         {
-            if(i2c_smbus_write_byte_data(file, i, buf[i+256])<0)
+            if(err_no=i2c_smbus_write_byte_data(file, i, buf[i+256])<0)
            {
-            printf("Failded to write Page 1 Address: %02x ->%d\n",i,errno());
+            printf("Failded to write Page 1 Address: %02x ->%d\n",i,err_no);
            }
 
            usleep(8000);
