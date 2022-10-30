@@ -25,7 +25,11 @@ int main(int argc, char *argv[])
             perror("Failed to open file");
             exit(1);
         }
-        read(spd, buf, 512);
+        if(read(spd, buf, 512)!=512)
+        {
+            perror("Failed read file");
+            exit(1);
+        }
         close(spd);
 
         int i2c_num = strtol(argv[1],NULL,0);
@@ -39,7 +43,7 @@ int main(int argc, char *argv[])
         {
             perror("Failed to open the i2c bus");
             exit(1);
-        }
+        }s
 
         //Set Page 0 (SPA0 command)
         ioctl(file, I2C_SLAVE, 0x36);
@@ -51,7 +55,12 @@ int main(int argc, char *argv[])
         //Read the entire page 0
         for (int i = 0; i < 256; i++)
         {
-           i2c_smbus_write_byte_data(file, i, buf[i]);
+            if(i2c_smbus_write_byte_data(file, i, buf[i])<0)
+           {
+            printf("Failded to write address Page 0 Add %02x",i);
+           }
+
+           usleep(500);
         }
 
         //Set Page 1 (SPA1 command)
@@ -62,7 +71,12 @@ int main(int argc, char *argv[])
         //Read the entire page 1
         for (int i = 0; i < 256; i++)
         {
-            i2c_smbus_write_byte_data(file, i, buf[i+256]);
+            if(i2c_smbus_write_byte_data(file, i, buf[i+256])<0)
+           {
+            printf("Failded to write address Page 0 Add %02x",i);
+           }
+
+           usleep(500);
         }
 
     }
