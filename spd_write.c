@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
             printf("Failded to write address Page 0 Add %02x",i);
            }
 
-           usleep(500);
+           usleep(8000);
         }
 
         //Set Page 1 (SPA1 command)
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
             printf("Failded to write address Page 1 Add %02x",i);
            }
 
-           usleep(500);
+           usleep(8000);
         }
 
     }
