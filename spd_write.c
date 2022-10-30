@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         {
             perror("Failed to open the i2c bus");
             exit(1);
-        }s
+        }
 
         //Set Page 0 (SPA0 command)
         ioctl(file, I2C_SLAVE, 0x36);
