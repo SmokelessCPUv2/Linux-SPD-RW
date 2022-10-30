@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
         int addr = strtol(argv[2],NULL,16);
         int file;
         system("modprobe i2c-dev");
-        char buf[255] = {0};
+        char buf[512] = {0};
         char filename[64];
         sprintf(filename,"/dev/i2c-%d",i2c_num);
         if ((file = open(filename, O_RDWR)) < 0)
@@ -30,24 +30,40 @@ int main(int argc, char *argv[])
             perror("Failed to open the i2c bus");
             exit(1);
         }
-        if (ioctl(file, I2C_SLAVE, addr) < 0)
-        {
-            printf("Failed to acquire bus access and/or talk to slave.\n");
-            exit(1);
-        }
 
-        for (int i = 0; i < 255; i++)
+        //Set Page 0 (SPA0 command)
+        ioctl(file, I2C_SLAVE, 0x36);
+        i2c_smbus_write_byte_data(file,0,0);
+
+        //Go back to regular to perform reading
+        ioctl(file, I2C_SLAVE, addr);
+
+        //Read the entire page 0
+        for (int i = 0; i < 256; i++)
         {
             buf[i] = i2c_smbus_read_byte_data(file, i);
         }
 
+        //Set Page 1 (SPA1 command)
+        ioctl(file, I2C_SLAVE, 0x37);
+        i2c_smbus_write_byte_data(file,0,0);
+        ioctl(file, I2C_SLAVE, addr);
+
+        //Read the entire page 1
+        for (int i = 0; i < 256; i++)
+        {
+            buf[i+256] = i2c_smbus_read_byte_data(file, i);
+        }
+
+
+        //Save Dump to file
         int spd = open(argv[3], O_RDWR | O_TRUNC | O_CREAT);
         if (spd < 1)
         {
             perror("Failed to open file");
             exit(1);
         }
-        write(spd, buf, 255);
+        write(spd, buf, 512);
         close(spd);
         chmod(argv[3], 0666);
         chown(argv[3], 1000,1000);
